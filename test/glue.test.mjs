@@ -310,3 +310,32 @@ test('no key: inert, no storage read, StatusReason no_key', async () => {
   assert.deepEqual(triggers, ['session_failed']);
   await rs.dispose();
 });
+
+test('error queue rules through the mirror: opt-out deletes the saved queue, and no trail ever reaches storage', async () => {
+  const state = {};
+  const srv = server(state);
+  const storage = asyncStorage();
+  const { rs } = start(srv, fakeRuntime(storage), {}, { captureErrors: false });
+  await rs.ready;
+  await settle();
+  state.offline = true;
+  rs.track('pickup', '');
+  rs.trackError('error', 'kept until opt-out');
+  rs.flush();
+  await settle();
+  assert.ok([...storage.map.keys()].some((k) => k.startsWith('ravensight_queue_')), 'saved while offline');
+  rs.setTrackingEnabled(false);
+  await settle();
+  assert.equal([...storage.map.keys()].some((k) => k.startsWith('ravensight_queue_')), false, 'opt-out deletes the saved queue');
+  rs.setTrackingEnabled(true);
+  rs.track('again', '');
+  rs.flush();
+  await settle();
+  assert.ok([...storage.map.keys()].some((k) => k.startsWith('ravensight_queue_')));
+  rs.resetDeviceId();
+  await settle();
+  // A reset keeps gameplay queued under the old id (the JavaScript SDK's
+  // rule); deleting automatic captures on a reset is that SDK's own test.
+  for (const [, text] of storage.map) assert.equal(text.includes('rs_trail'), false, 'never a trail on disk');
+  await rs.dispose();
+});
