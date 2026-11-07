@@ -1,0 +1,22 @@
+{
+  "name": "ravensight-construct",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ravensight player analytics as a Construct 3 plugin, bundling the Ravensight JavaScript SDK.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "ravensight": ">=0.7.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/build.mjs --no-zip && node --test \"test/*.test.mjs\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reality-Software-Entertainment/ravensight-construct.git"
+  }
+}

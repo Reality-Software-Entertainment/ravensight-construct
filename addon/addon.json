@@ -1,0 +1,35 @@
+{
+  "is-c3-addon": true,
+  "sdk-version": 2,
+  "type": "plugin",
+  "name": "Ravensight",
+  "id": "RealitySE_Ravensight",
+  "version": "0.1.0.0",
+  "author": "Reality Software Entertainment",
+  "website": "https://ravensight.io",
+  "documentation": "https://ravensight.io/docs/",
+  "description": "Player analytics: sessions, events, retention, levels, purchases, errors, ads, attribution, remote config and experiments.",
+  "editor-scripts": [
+    "plugin.js",
+    "type.js",
+    "instance.js"
+  ],
+  "file-list": [
+    "c3runtime/main.js",
+    "c3runtime/ravensight.js",
+    "c3runtime/glue.js",
+    "c3runtime/plugin.js",
+    "c3runtime/type.js",
+    "c3runtime/instance.js",
+    "c3runtime/conditions.js",
+    "c3runtime/actions.js",
+    "c3runtime/expressions.js",
+    "lang/en-US.json",
+    "aces.json",
+    "addon.json",
+    "icon.svg",
+    "instance.js",
+    "plugin.js",
+    "type.js"
+  ]
+}

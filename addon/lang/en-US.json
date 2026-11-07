@@ -1,0 +1,385 @@
+{
+  "languageTag": "en-US",
+  "fileDescription": "Strings for the Ravensight plugin.",
+  "text": {
+    "plugins": {
+      "realityse_ravensight": {
+        "name": "Ravensight",
+        "description": "Player analytics: sessions, events, retention, levels, purchases, errors, ads, attribution, remote config and experiments.",
+        "help-url": "https://ravensight.io/docs/",
+        "properties": {
+          "ingest-key": {
+            "name": "Ingest key",
+            "desc": "Your game's publishable key (gt_live_ or gt_pub_). Empty means off."
+          },
+          "game-version": {
+            "name": "Game version",
+            "desc": "Sent on every session. Empty uses the project version."
+          },
+          "consent": {
+            "name": "Consent",
+            "desc": "Opt out: on until the player says no. Opt in: nothing until the player says yes.",
+            "items": {
+              "opt-out": "Opt out",
+              "opt-in": "Opt in"
+            }
+          },
+          "capture-errors": {
+            "name": "Capture errors",
+            "desc": "Automatic error capture, scrubbed on the device."
+          },
+          "distribution": {
+            "name": "Distribution",
+            "desc": "A short store label, such as itch or steam. Optional."
+          },
+          "api-url": {
+            "name": "API URL",
+            "desc": "Empty for https://api.ravensight.io."
+          },
+          "debug": {
+            "name": "Debug",
+            "desc": "Log SDK activity to the console."
+          }
+        },
+        "aceCategories": {
+          "ravensight": "Ravensight"
+        },
+        "conditions": {
+          "on-session-ready": {
+            "list-name": "On session ready",
+            "display-text": "On session ready",
+            "description": "Triggered when the session opens and events can be sent."
+          },
+          "on-session-failed": {
+            "list-name": "On session failed",
+            "display-text": "On session failed",
+            "description": "Triggered when no session could be opened. StatusReason says why."
+          },
+          "on-config-ready": {
+            "list-name": "On config ready",
+            "display-text": "On remote config ready",
+            "description": "Triggered after a remote config fetch, from the network, the cache or the defaults."
+          },
+          "is-tracking-enabled": {
+            "list-name": "Is tracking enabled",
+            "display-text": "Is tracking enabled",
+            "description": "True while the SDK is collecting: a key, the player's consent, not switched off."
+          },
+          "is-session-ready": {
+            "list-name": "Is session ready",
+            "display-text": "Is session ready",
+            "description": "True while a session is open."
+          }
+        },
+        "actions": {
+          "track": {
+            "list-name": "Track event",
+            "display-text": "Track [b]{0}[/b] with {1}",
+            "description": "Queue an event. Data is a JSON object, such as {\"level\": \"forest_1\"}.",
+            "params": {
+              "name": {
+                "name": "Name",
+                "desc": "The event name."
+              },
+              "data-json": {
+                "name": "Data",
+                "desc": "A JSON object of properties, or empty."
+              }
+            }
+          },
+          "track-with-property": {
+            "list-name": "Track event with a property",
+            "display-text": "Track [b]{0}[/b] with {1} = {2}",
+            "description": "Queue an event with one property.",
+            "params": {
+              "name": {
+                "name": "Name",
+                "desc": "The event name."
+              },
+              "property": {
+                "name": "Property",
+                "desc": "The property name."
+              },
+              "value": {
+                "name": "Value",
+                "desc": "A number or a text."
+              }
+            }
+          },
+          "level-start": {
+            "list-name": "Level start",
+            "display-text": "Level [b]{0}[/b] started",
+            "description": "A level started (rs_kind level_start).",
+            "params": {
+              "level": {
+                "name": "Level",
+                "desc": "The level name."
+              }
+            }
+          },
+          "level-complete": {
+            "list-name": "Level complete",
+            "display-text": "Level [b]{0}[/b] completed",
+            "description": "A level was completed (rs_kind level_complete).",
+            "params": {
+              "level": {
+                "name": "Level",
+                "desc": "The level name."
+              }
+            }
+          },
+          "death": {
+            "list-name": "Death",
+            "display-text": "Player died in [b]{0}[/b]",
+            "description": "The player died (rs_kind death).",
+            "params": {
+              "level": {
+                "name": "Level",
+                "desc": "The level name."
+              }
+            }
+          },
+          "purchase": {
+            "list-name": "Purchase",
+            "display-text": "Purchase of {2} {3} for {0} {1}",
+            "description": "A real-money purchase. Amount is whole minor units: 499 is 4.99.",
+            "params": {
+              "amount": {
+                "name": "Amount",
+                "desc": "Whole minor units of the currency."
+              },
+              "currency": {
+                "name": "Currency",
+                "desc": "Three letters, such as \"USD\"."
+              },
+              "item-type": {
+                "name": "Item type",
+                "desc": "Such as \"gems\"."
+              },
+              "item-id": {
+                "name": "Item ID",
+                "desc": "Such as \"gem_pack_small\"."
+              }
+            }
+          },
+          "track-error": {
+            "list-name": "Track error",
+            "display-text": "Track a {0} error: {1}",
+            "description": "An error the game reports itself.",
+            "params": {
+              "severity": {
+                "name": "Severity",
+                "desc": "How bad it is.",
+                "items": {
+                  "debug": "Debug",
+                  "info": "Info",
+                  "warning": "Warning",
+                  "error": "Error",
+                  "critical": "Critical"
+                }
+              },
+              "message": {
+                "name": "Message",
+                "desc": "What went wrong. Cut to 200 characters."
+              }
+            }
+          },
+          "track-ad": {
+            "list-name": "Track ad",
+            "display-text": "Ad {2} on {0} ({1})",
+            "description": "One ad step without revenue: clicked, failed or rewarded.",
+            "params": {
+              "network": {
+                "name": "Network",
+                "desc": "The network that served the ad."
+              },
+              "format": {
+                "name": "Format",
+                "desc": "The ad format.",
+                "items": {
+                  "banner": "Banner",
+                  "interstitial": "Interstitial",
+                  "rewarded": "Rewarded",
+                  "native": "Native",
+                  "app_open": "App open",
+                  "other": "Other"
+                }
+              },
+              "result": {
+                "name": "Result",
+                "desc": "What happened.",
+                "items": {
+                  "shown": "Shown",
+                  "clicked": "Clicked",
+                  "failed": "Failed",
+                  "rewarded": "Rewarded"
+                }
+              },
+              "placement": {
+                "name": "Placement",
+                "desc": "Your own placement name, or empty."
+              }
+            }
+          },
+          "track-ad-revenue": {
+            "list-name": "Track ad revenue",
+            "display-text": "Ad revenue {3} {4} from {0} ({1})",
+            "description": "A paid impression. Revenue is the mediation callback's value in major units; it is converted to micros without a float multiply.",
+            "params": {
+              "network": {
+                "name": "Network",
+                "desc": "The network that served the ad."
+              },
+              "format": {
+                "name": "Format",
+                "desc": "The ad format.",
+                "items": {
+                  "banner": "Banner",
+                  "interstitial": "Interstitial",
+                  "rewarded": "Rewarded",
+                  "native": "Native",
+                  "app_open": "App open",
+                  "other": "Other"
+                }
+              },
+              "placement": {
+                "name": "Placement",
+                "desc": "Your own placement name, or empty."
+              },
+              "revenue": {
+                "name": "Revenue",
+                "desc": "In major units, such as 0.0015."
+              },
+              "currency": {
+                "name": "Currency",
+                "desc": "Three letters, as the callback reported."
+              }
+            }
+          },
+          "set-attribution": {
+            "list-name": "Set attribution",
+            "display-text": "Attribution from {0}",
+            "description": "Where this install came from. Sent once per device.",
+            "params": {
+              "source": {
+                "name": "Source",
+                "desc": "utm, store_referrer, organic or a partner name."
+              },
+              "network": {
+                "name": "Network",
+                "desc": "Media source, or empty."
+              },
+              "campaign": {
+                "name": "Campaign",
+                "desc": "Or empty."
+              },
+              "adset": {
+                "name": "Ad set",
+                "desc": "Or empty."
+              },
+              "creative": {
+                "name": "Creative",
+                "desc": "Or empty."
+              }
+            }
+          },
+          "set-tracking-enabled": {
+            "list-name": "Set tracking enabled",
+            "display-text": "Set tracking enabled to {0}",
+            "description": "The player's choice, saved at once. Off drops the queue and sends nothing more.",
+            "params": {
+              "enabled": {
+                "name": "Enabled",
+                "desc": "On or off."
+              }
+            }
+          },
+          "fetch-config": {
+            "list-name": "Fetch remote config",
+            "display-text": "Fetch remote config",
+            "description": "Fetch this device's remote config. On config ready triggers after."
+          },
+          "flush": {
+            "list-name": "Flush",
+            "display-text": "Send queued events now",
+            "description": "Send now. Never cuts a server's Retry-After short."
+          },
+          "submit-feedback": {
+            "list-name": "Submit feedback",
+            "display-text": "Submit {1} feedback: {0}",
+            "description": "Player feedback.",
+            "params": {
+              "message": {
+                "name": "Message",
+                "desc": "What the player wrote."
+              },
+              "category": {
+                "name": "Category",
+                "desc": "The kind of feedback.",
+                "items": {
+                  "bug": "Bug",
+                  "suggestion": "Suggestion",
+                  "complaint": "Complaint",
+                  "praise": "Praise",
+                  "playtest": "Playtest",
+                  "other": "Other"
+                }
+              },
+              "rating": {
+                "name": "Rating",
+                "desc": "1 to 5, or 0 for none."
+              }
+            }
+          },
+          "reset-device-id": {
+            "list-name": "Reset device ID",
+            "display-text": "Reset the device ID",
+            "description": "Start over with a new random device ID; the queue and the session are dropped."
+          }
+        },
+        "expressions": {
+          "deviceid": {
+            "description": "This install's random device ID, or empty before consent.",
+            "translated-name": "DeviceId"
+          },
+          "statusreason": {
+            "description": "Why no session is open (no_key, no_consent, disabled, invalid_key, tracking_disabled, offline, rate_limited, session_failed), or empty.",
+            "translated-name": "StatusReason"
+          },
+          "configstring": {
+            "description": "A remote config text value. Reading it marks this session as seeing any running experiment.",
+            "translated-name": "ConfigString",
+            "params": {
+              "key": {
+                "name": "Key",
+                "desc": "The config key."
+              },
+              "default": {
+                "name": "Default",
+                "desc": "Returned when the key is missing or not a text."
+              }
+            }
+          },
+          "confignumber": {
+            "description": "A remote config number. Reading it marks this session as seeing any running experiment.",
+            "translated-name": "ConfigNumber",
+            "params": {
+              "key": {
+                "name": "Key",
+                "desc": "The config key."
+              },
+              "default": {
+                "name": "Default",
+                "desc": "Returned when the key is missing or not a number."
+              }
+            }
+          },
+          "queuelength": {
+            "description": "Events waiting to be sent.",
+            "translated-name": "QueueLength"
+          }
+        }
+      }
+    }
+  }
+}

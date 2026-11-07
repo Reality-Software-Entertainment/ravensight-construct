@@ -1,0 +1,333 @@
+{
+  "ravensight": {
+    "conditions": [
+      {
+        "id": "on-session-ready",
+        "scriptName": "OnSessionReady",
+        "isTrigger": true
+      },
+      {
+        "id": "on-session-failed",
+        "scriptName": "OnSessionFailed",
+        "isTrigger": true
+      },
+      {
+        "id": "on-config-ready",
+        "scriptName": "OnConfigReady",
+        "isTrigger": true
+      },
+      {
+        "id": "is-tracking-enabled",
+        "scriptName": "IsTrackingEnabled"
+      },
+      {
+        "id": "is-session-ready",
+        "scriptName": "IsSessionReady"
+      }
+    ],
+    "actions": [
+      {
+        "id": "track",
+        "scriptName": "Track",
+        "params": [
+          {
+            "id": "name",
+            "type": "string"
+          },
+          {
+            "id": "data-json",
+            "type": "string",
+            "initialValue": "\"{}\""
+          }
+        ]
+      },
+      {
+        "id": "track-with-property",
+        "scriptName": "TrackWithProperty",
+        "params": [
+          {
+            "id": "name",
+            "type": "string"
+          },
+          {
+            "id": "property",
+            "type": "string"
+          },
+          {
+            "id": "value",
+            "type": "any"
+          }
+        ]
+      },
+      {
+        "id": "level-start",
+        "scriptName": "LevelStart",
+        "params": [
+          {
+            "id": "level",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "level-complete",
+        "scriptName": "LevelComplete",
+        "params": [
+          {
+            "id": "level",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "death",
+        "scriptName": "Death",
+        "params": [
+          {
+            "id": "level",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "purchase",
+        "scriptName": "Purchase",
+        "params": [
+          {
+            "id": "amount",
+            "type": "number"
+          },
+          {
+            "id": "currency",
+            "type": "string"
+          },
+          {
+            "id": "item-type",
+            "type": "string"
+          },
+          {
+            "id": "item-id",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "track-error",
+        "scriptName": "TrackError",
+        "params": [
+          {
+            "id": "severity",
+            "type": "combo",
+            "items": [
+              "debug",
+              "info",
+              "warning",
+              "error",
+              "critical"
+            ],
+            "initialValue": "error"
+          },
+          {
+            "id": "message",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "track-ad",
+        "scriptName": "TrackAd",
+        "params": [
+          {
+            "id": "network",
+            "type": "string"
+          },
+          {
+            "id": "format",
+            "type": "combo",
+            "items": [
+              "banner",
+              "interstitial",
+              "rewarded",
+              "native",
+              "app_open",
+              "other"
+            ],
+            "initialValue": "rewarded"
+          },
+          {
+            "id": "result",
+            "type": "combo",
+            "items": [
+              "shown",
+              "clicked",
+              "failed",
+              "rewarded"
+            ],
+            "initialValue": "clicked"
+          },
+          {
+            "id": "placement",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "track-ad-revenue",
+        "scriptName": "TrackAdRevenue",
+        "params": [
+          {
+            "id": "network",
+            "type": "string"
+          },
+          {
+            "id": "format",
+            "type": "combo",
+            "items": [
+              "banner",
+              "interstitial",
+              "rewarded",
+              "native",
+              "app_open",
+              "other"
+            ],
+            "initialValue": "rewarded"
+          },
+          {
+            "id": "placement",
+            "type": "string"
+          },
+          {
+            "id": "revenue",
+            "type": "number"
+          },
+          {
+            "id": "currency",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "set-attribution",
+        "scriptName": "SetAttribution",
+        "params": [
+          {
+            "id": "source",
+            "type": "string"
+          },
+          {
+            "id": "network",
+            "type": "string"
+          },
+          {
+            "id": "campaign",
+            "type": "string"
+          },
+          {
+            "id": "adset",
+            "type": "string"
+          },
+          {
+            "id": "creative",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "set-tracking-enabled",
+        "scriptName": "SetTrackingEnabled",
+        "params": [
+          {
+            "id": "enabled",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "id": "fetch-config",
+        "scriptName": "FetchConfig"
+      },
+      {
+        "id": "flush",
+        "scriptName": "Flush"
+      },
+      {
+        "id": "submit-feedback",
+        "scriptName": "SubmitFeedback",
+        "params": [
+          {
+            "id": "message",
+            "type": "string"
+          },
+          {
+            "id": "category",
+            "type": "combo",
+            "items": [
+              "bug",
+              "suggestion",
+              "complaint",
+              "praise",
+              "playtest",
+              "other"
+            ],
+            "initialValue": "other"
+          },
+          {
+            "id": "rating",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "reset-device-id",
+        "scriptName": "ResetDeviceId"
+      }
+    ],
+    "expressions": [
+      {
+        "id": "deviceid",
+        "expressionName": "DeviceId",
+        "returnType": "string"
+      },
+      {
+        "id": "statusreason",
+        "expressionName": "StatusReason",
+        "returnType": "string"
+      },
+      {
+        "id": "configstring",
+        "expressionName": "ConfigString",
+        "returnType": "string",
+        "params": [
+          {
+            "id": "key",
+            "type": "string"
+          },
+          {
+            "id": "default",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "confignumber",
+        "expressionName": "ConfigNumber",
+        "returnType": "number",
+        "params": [
+          {
+            "id": "key",
+            "type": "string"
+          },
+          {
+            "id": "default",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "queuelength",
+        "expressionName": "QueueLength",
+        "returnType": "number"
+      }
+    ]
+  }
+}
