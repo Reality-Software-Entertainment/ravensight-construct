@@ -291,7 +291,7 @@
           "set-tracking-enabled": {
             "list-name": "Set tracking enabled",
             "display-text": "Set tracking enabled to {0}",
-            "description": "The player's choice, saved at once. Off drops the queue and sends nothing more.",
+            "description": "The player's choice. Off drops the queue, deletes a stored account hash and sends nothing more. Saved only with Consent set to Opt in.",
             "params": {
               "enabled": {
                 "name": "Enabled",

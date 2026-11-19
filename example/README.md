@@ -2,10 +2,13 @@
 
 Add the Ravensight object to your project (Insert new object > Web >
 Ravensight), set its **Ingest key** property, then build event sheets like
-this one. Every action, condition and expression below ships in the addon.
+this one. Every action, condition and expression below ships in the addon. Identify
+player, Reset identity and Set campaign link need the addon built with
+`ravensight` 0.12.0 or newer; Set campaign link uses the Browser object.
 
 ```
 System: On start of layout
+    Ravensight: Set campaign link to Browser.QueryParam("rs_link")
     Ravensight: Level "forest_1" started
     Ravensight: Fetch remote config
 
@@ -27,6 +30,12 @@ Ads: On rewarded ad paid (revenue in major units from your ad plugin)
 
 Settings: On "Analytics" checkbox clicked
     Ravensight: Set tracking enabled to AnalyticsCheckbox.IsChecked
+
+Login: On signed in (your own login; AnalyticsId is a random ID stored with the account)
+    Ravensight: Identify the player as Account.AnalyticsId
+
+Login: On signed out
+    Ravensight: Reset the player identity
 
 Ravensight: On session failed
     System: Log "Ravensight: " & Ravensight.StatusReason

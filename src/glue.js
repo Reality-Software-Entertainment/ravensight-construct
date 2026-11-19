@@ -28,7 +28,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '0.1.0';
+  var VERSION = '0.2.0';
   var STORAGE_PREFIX = 'ravensight';
   var SEVERITIES = ['debug', 'info', 'warning', 'error', 'critical'];
   var AD_FORMATS = ['banner', 'interstitial', 'rewarded', 'native', 'app_open', 'other'];
