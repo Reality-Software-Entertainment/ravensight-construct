@@ -29,6 +29,8 @@ names the version needed. Everything else still builds on 0.7.0 or newer.
   there is no release download. CI runs nightly on weekdays and on demand
   instead of on every push, and a pre-push hook in `.githooks` runs the
   tests first.
+- `package-lock.json` is committed; CI and the pre-push hook install with
+  `npm ci`, so a run is reproducible from the commit.
 - Set tracking enabled's description and the README's privacy notes now say
   the player's choice is saved only with Consent set to Opt in (they said
   it was always saved), and that sessions read as the JavaScript SDK.

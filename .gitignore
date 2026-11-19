@@ -1,5 +1,4 @@
 node_modules/
-package-lock.json
 dist/
 addon/c3runtime/ravensight.js
 addon/c3runtime/glue.js

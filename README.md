@@ -22,11 +22,14 @@ There is no release download yet: build the addon from this repository,
 [ravensight-construct](https://github.com/Reality-Software-Entertainment/ravensight-construct)
 (tag `v0.2.0`), with Node 24.
 
-1. In a clone of the repository: `npm install`, then `npm run build`. The
-   addon lands in `dist/ravensight-0.2.0.c3addon`. It bundles the
-   `ravensight` package npm installed (0.7.0 or later; Identify player,
-   Reset identity and Set campaign link need 0.12.0 or newer); the first
-   line of `addon/c3runtime/ravensight.js` names its version.
+1. In a clone of the repository: `npm ci`, then `npm run build`. The addon
+   lands in `dist/ravensight-0.2.0.c3addon`. It bundles the `ravensight`
+   package at the version `package-lock.json` locks, 0.11.0 today; the
+   first line of `addon/c3runtime/ravensight.js` names it. Identify player,
+   Reset identity and Set campaign link need 0.12.0 or newer: until the
+   lock moves to it, an addon built this way has those actions but they do
+   nothing and print one warning. Once 0.12.0 or newer is on npm,
+   `npm install ravensight@latest` before `npm run build` bundles it.
 2. In Construct: Menu > View > Addon manager > Install new addon, and pick
    that file.
 3. Insert the **Ravensight** object (Web category) into your project. It is
@@ -214,12 +217,16 @@ is sent until it is set to true, and the yes is saved.
 ## Develop
 
 ```
-npm install
+npm ci          # the JavaScript SDK at the version package-lock.json locks
 npm test        # builds addon/c3runtime, then runs the tests (Node 24)
 npm run build   # builds dist/ravensight-<version>.c3addon
 ```
 
-Install the local checks once per clone: `git config core.hooksPath .githooks`. The pre-push hook then runs this repository's tests before every push, with a time limit, and refuses the push if they fail. CI runs nightly and on demand, not on pushes or pull requests, so this hook is where a change is checked first.
+With the locked SDK (0.11.0 today) the tests that need identify or
+`setCampaignLink` from the SDK itself are skipped and say why; the addon's
+own checks of those actions still run.
+
+Install the local checks once per clone: `git config core.hooksPath .githooks`. The pre-push hook then runs this repository's tests before every push, with a time limit, and refuses the push if they fail. CI runs nightly and on demand, not on pushes or pull requests, so this hook is where a change is checked first. `sh .githooks/test-pre-push.sh` tests the hook's refuse paths.
 
 ## License
 
