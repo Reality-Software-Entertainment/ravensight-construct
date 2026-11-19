@@ -69,6 +69,11 @@
             "list-name": "Is session ready",
             "display-text": "Is session ready",
             "description": "True while a session is open."
+          },
+          "is-identified": {
+            "list-name": "Is identified",
+            "display-text": "Is identified",
+            "description": "True while an account is set by Identify player. Always false when the bundled SDK is older than 0.12.0."
           }
         },
         "actions": {
@@ -335,6 +340,33 @@
             "list-name": "Reset device ID",
             "display-text": "Reset the device ID",
             "description": "Start over with a new random device ID; the queue and the session are dropped."
+          },
+          "identify": {
+            "list-name": "Identify player",
+            "display-text": "Identify the player as [b]{0}[/b]",
+            "description": "After your own sign-in: one person on two devices, or before and after signing in, counts as one player. Only a salted hash of the ID is sent, once per session. Needs the bundled SDK 0.12.0 or newer.",
+            "params": {
+              "account-id": {
+                "name": "Account ID",
+                "desc": "A random ID made once for the account and stored with it. Never an email, a name or a sequential number."
+              }
+            }
+          },
+          "reset-identity": {
+            "list-name": "Reset identity",
+            "display-text": "Reset the player identity",
+            "description": "On sign-out: forgets the account and switches to a new device ID, so the next player is not linked to this one. Needs the bundled SDK 0.12.0 or newer."
+          },
+          "set-campaign-link": {
+            "list-name": "Set campaign link",
+            "display-text": "Set campaign link to [b]{0}[/b]",
+            "description": "The rs_link value of the address the game was opened with. Sent once, with the next session, and never stored. Empty is ignored. Needs the bundled SDK 0.12.0 or newer.",
+            "params": {
+              "link-id": {
+                "name": "Link ID",
+                "desc": "24 characters, 0-9 and a-f, such as Browser.QueryParam(\"rs_link\")."
+              }
+            }
           }
         },
         "expressions": {
@@ -377,6 +409,10 @@
           "queuelength": {
             "description": "Events waiting to be sent.",
             "translated-name": "QueueLength"
+          },
+          "identifyrefusal": {
+            "description": "Why the last Identify player was refused: empty, too_long, looks_like_email, or unsupported when the bundled SDK is older than 0.12.0. Empty when it was accepted.",
+            "translated-name": "IdentifyRefusal"
           }
         }
       }

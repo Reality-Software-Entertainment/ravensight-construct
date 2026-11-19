@@ -23,6 +23,10 @@
       {
         "id": "is-session-ready",
         "scriptName": "IsSessionReady"
+      },
+      {
+        "id": "is-identified",
+        "scriptName": "IsIdentified"
       }
     ],
     "actions": [
@@ -280,6 +284,30 @@
       {
         "id": "reset-device-id",
         "scriptName": "ResetDeviceId"
+      },
+      {
+        "id": "identify",
+        "scriptName": "Identify",
+        "params": [
+          {
+            "id": "account-id",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "id": "reset-identity",
+        "scriptName": "ResetIdentity"
+      },
+      {
+        "id": "set-campaign-link",
+        "scriptName": "SetCampaignLink",
+        "params": [
+          {
+            "id": "link-id",
+            "type": "string"
+          }
+        ]
       }
     ],
     "expressions": [
@@ -327,6 +355,11 @@
         "id": "queuelength",
         "expressionName": "QueueLength",
         "returnType": "number"
+      },
+      {
+        "id": "identifyrefusal",
+        "expressionName": "IdentifyRefusal",
+        "returnType": "string"
       }
     ]
   }

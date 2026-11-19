@@ -16,4 +16,7 @@ C3.Plugins.RealitySE_Ravensight.Exps = {
   QueueLength() {
     return this._rs.queueLength();
   },
+  IdentifyRefusal() {
+    return this._rs.identifyRefusal();
+  },
 };

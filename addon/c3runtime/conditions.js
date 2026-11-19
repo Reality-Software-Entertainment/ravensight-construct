@@ -16,4 +16,7 @@ C3.Plugins.RealitySE_Ravensight.Cnds = {
   IsSessionReady() {
     return this._rs.isSessionReady();
   },
+  IsIdentified() {
+    return this._rs.isIdentified();
+  },
 };

@@ -10,7 +10,11 @@
 //     `runtime.storage`, loaded once before the client starts,
 //   * game_started at start, and a flush when the runtime is suspended,
 //   * a platform name from the runtime's platform info,
-//   * every action the event sheet calls, buffered until the client exists.
+//   * every action the event sheet calls, buffered until the client exists,
+//   * Identify player and Set campaign link checked on the event sheet's
+//     side, so a refusal is known at once, and nothing but one warning when
+//     the bundled SDK is older than 0.12.0. The hashing, the stored identity
+//     and the campaign link rules are the JavaScript SDK's own code.
 //
 // When the runtime runs in the page (worker off), the JavaScript SDK uses
 // the page itself: localStorage, page hide and its own automatic events.
@@ -30,6 +34,43 @@
   var AD_FORMATS = ['banner', 'interstitial', 'rewarded', 'native', 'app_open', 'other'];
   var AD_RESULTS = ['shown', 'clicked', 'failed', 'rewarded'];
   var CATEGORIES = ['bug', 'suggestion', 'complaint', 'praise', 'playtest', 'other'];
+  /** identify() and setCampaignLink() are in the JavaScript SDK from this version. */
+  var IDENTIFY_SDK = '0.12.0';
+  var IDENTIFY_MAX_BYTES = 256;
+  var LINK_ID = /^[0-9a-fA-F]{24}$/;
+
+  /** UTF-8 bytes of a string, as the server and the SDK count them. */
+  function utf8Length(text) {
+    if (typeof TextEncoder === 'function') return new TextEncoder().encode(text).length;
+    var bytes = 0;
+    for (var i = 0; i < text.length; i++) {
+      var code = text.charCodeAt(i);
+      if (code < 0x80) bytes += 1;
+      else if (code < 0x800) bytes += 2;
+      else if (code >= 0xd800 && code <= 0xdbff && i + 1 < text.length) {
+        bytes += 4;
+        i += 1;
+      } else bytes += 3;
+    }
+    return bytes;
+  }
+
+  /**
+   * The account ID as identify() takes it, checked by the contract's rules:
+   * text, or a whole number as its decimal digits; not empty; at most 256
+   * bytes of UTF-8; no "@". Used exactly as given, never trimmed.
+   * Returns { text } or { reason }.
+   */
+  function accountText(value) {
+    var text;
+    if (typeof value === 'string') text = value;
+    else if (typeof value === 'number' && Number.isSafeInteger(value)) text = String(value);
+    else return { reason: 'not_text' };
+    if (text === '') return { reason: 'empty' };
+    if (utf8Length(text) > IDENTIFY_MAX_BYTES) return { reason: 'too_long' };
+    if (text.indexOf('@') >= 0) return { reason: 'looks_like_email' };
+    return { text: text };
+  }
 
   function hasPage() {
     return typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -163,6 +204,24 @@
     var listeners = [];
     var disposed = false;
     var storage = null;
+    var proto = (SDK && SDK.Ravensight && SDK.Ravensight.prototype) || {};
+    var canIdentify = typeof proto.identify === 'function' && typeof proto.resetIdentity === 'function';
+    var canSetLink = typeof proto.setCampaignLink === 'function';
+    var bundled = (SDK && SDK.VERSION) || 'an older version';
+    var warned = {};
+    /** Why the last Identify player was refused, or '' when it was accepted. */
+    var identifyRefusal = '';
+    /** Before the client exists: true after a waiting identify, false after a waiting reset. */
+    var waitingIdentified = false;
+
+    function warnOnce(kind, action) {
+      if (warned[kind]) return;
+      warned[kind] = true;
+      warn(
+        'Ravensight: ' + action + ' needs the Ravensight JavaScript SDK ' + IDENTIFY_SDK + ' or newer, and this addon bundles ' +
+          bundled + '. Nothing was sent. Rebuild the addon with a newer ravensight package.',
+      );
+    }
 
     var options = {
       ingestKey: key || null,
@@ -358,6 +417,64 @@
           void c.resetDeviceId().catch(function () {});
         });
       },
+      /**
+       * After the game's own sign-in. Returns true when the ID was handed to
+       * the SDK; false, with IdentifyRefusal set and one warning that never
+       * contains the value, when it was refused.
+       */
+      identify: function (accountId) {
+        if (!canIdentify) {
+          identifyRefusal = 'unsupported';
+          warnOnce('identify', 'Identify player');
+          return false;
+        }
+        var checked = accountText(accountId);
+        if (checked.reason) {
+          identifyRefusal = checked.reason;
+          warn('Ravensight: Identify player refused (' + checked.reason + '). Pass a random ID stored with the account, never an email, a name or a sequential number.');
+          return false;
+        }
+        identifyRefusal = '';
+        if (!client) waitingIdentified = true;
+        run(function (c) {
+          c.identify(checked.text).catch(function (err) {
+            identifyRefusal = (err && err.code) || 'refused';
+          });
+        });
+        return true;
+      },
+      /** On sign-out: the SDK forgets the account and switches to a new device ID. */
+      resetIdentity: function () {
+        if (!canIdentify) {
+          warnOnce('identify', 'Reset identity');
+          return false;
+        }
+        if (!client) waitingIdentified = false;
+        run(function (c) {
+          void c.resetIdentity().catch(function () {});
+        });
+        return true;
+      },
+      /**
+       * The rs_link value of the address the game was opened with. An empty
+       * value (no rs_link there) is ignored quietly; anything else that is
+       * not a link ID warns and is ignored.
+       */
+      setCampaignLink: function (linkId) {
+        if (!canSetLink) {
+          warnOnce('link', 'Set campaign link');
+          return false;
+        }
+        if (linkId === '') return false;
+        if (typeof linkId !== 'string' || !LINK_ID.test(linkId)) {
+          warn('Ravensight: Set campaign link ignored: a link ID is 24 characters, 0-9 and a-f.');
+          return false;
+        }
+        run(function (c) {
+          c.setCampaignLink(linkId);
+        });
+        return true;
+      },
 
       // --- conditions -----------------------------------------------------
       isTrackingEnabled: function () {
@@ -365,6 +482,11 @@
       },
       isSessionReady: function () {
         return Boolean(client && client.isSessionValid());
+      },
+      isIdentified: function () {
+        if (!canIdentify) return false;
+        if (!client) return waitingIdentified;
+        return Boolean(client.isIdentified);
       },
 
       // --- expressions ----------------------------------------------------
@@ -384,6 +506,9 @@
       },
       queueLength: function () {
         return client ? client.queue.length : buffered.length;
+      },
+      identifyRefusal: function () {
+        return identifyRefusal;
       },
 
       dispose: function () {

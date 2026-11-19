@@ -46,4 +46,13 @@ C3.Plugins.RealitySE_Ravensight.Acts = {
   ResetDeviceId() {
     this._rs.resetDeviceId();
   },
+  Identify(accountId) {
+    this._rs.identify(accountId);
+  },
+  ResetIdentity() {
+    this._rs.resetIdentity();
+  },
+  SetCampaignLink(linkId) {
+    this._rs.setCampaignLink(linkId);
+  },
 };
