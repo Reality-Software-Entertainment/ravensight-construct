@@ -5,10 +5,12 @@ levels, purchases, errors, ads and attribution, remote config and
 experiments, sent to [Ravensight](https://ravensight.io), from the event
 sheet.
 
-Version 0.1.0. Beta: the glue is tested against the Ravensight JavaScript
-SDK and a fake server, and the runtime scripts in a sandbox, but the addon
-has not yet been loaded into Construct. See
-[docs/FEASIBILITY.md](docs/FEASIBILITY.md).
+Preview: not yet verified inside Construct 3; tested with the addon's
+runtime scripts under Node 24 against the Ravensight JavaScript SDK and a
+fake server.
+
+Version 0.1.0. What each Construct feature maps to, and what is degraded,
+is in [docs/FEASIBILITY.md](docs/FEASIBILITY.md).
 
 The addon is a plugin that bundles the Ravensight JavaScript SDK, so every
 delivery rule (the saved queue, retries, signing, compression, error
@@ -16,9 +18,16 @@ capture) is that SDK's.
 
 ## Install
 
-1. Download `ravensight-0.1.0.c3addon` from the releases, or build it with
-   `npm install && npm run build` (it lands in `dist/`).
-2. In Construct: Menu > View > Addon manager > Install new addon.
+There is no release download yet: build the addon from this repository,
+[ravensight-construct](https://github.com/Reality-Software-Entertainment/ravensight-construct)
+(tag `v0.2.0`), with Node 24.
+
+1. In a clone of the repository: `npm install`, then `npm run build`. The
+   addon lands in `dist/ravensight-0.1.0.c3addon`. It bundles the
+   `ravensight` package npm installed (0.7.0 or later); the first line of
+   `addon/c3runtime/ravensight.js` names its version.
+2. In Construct: Menu > View > Addon manager > Install new addon, and pick
+   that file.
 3. Insert the **Ravensight** object (Web category) into your project. It is
    a single global object.
 4. Set its **Ingest key** property to your game's key.
@@ -98,13 +107,15 @@ The player's choice: `Set tracking enabled` to false stops sending, drops
 the queue and is saved. With Consent set to Opt in, nothing is sent until
 it is set to true.
 
-## Building and testing
+## Develop
 
 ```
 npm install
-npm test        # builds addon/c3runtime, then runs the tests
+npm test        # builds addon/c3runtime, then runs the tests (Node 24)
 npm run build   # builds dist/ravensight-<version>.c3addon
 ```
+
+Install the local checks once per clone: `git config core.hooksPath .githooks`. The pre-push hook then runs this repository's tests before every push, with a time limit, and refuses the push if they fail. CI runs nightly and on demand, not on pushes or pull requests, so this hook is where a change is checked first.
 
 ## License
 
